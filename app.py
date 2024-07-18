@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import pandas as pd
 import re
 
@@ -21,19 +21,15 @@ def validar_contraseña(password):
         return False
     return True
 
-# Ruta para la página de inicio de sesión
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         password = request.form['password']
         if validar_contraseña(password):
-            # Si la contraseña es válida, redirige a la página de búsqueda
             return redirect(url_for('index'))
         else:
-            # Si la contraseña no es válida, muestra un mensaje de error
             error_message = "La contraseña no cumple con los criterios de validación."
             return render_template('login.html', error_message=error_message)
-    # Si es una solicitud GET, simplemente muestra el formulario de inicio de sesión
     return render_template('login.html')
 
 def search_nombre(patron):
@@ -55,5 +51,13 @@ def lista():
     else:
         return render_template('resultado.html')
 
+@app.route('/hello')
+def hello():
+    return "Hello, World!"
+
+@app.route('/new-endpoint')
+def new_endpoint():
+    return "This is a new endpoint!"
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
